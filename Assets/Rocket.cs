@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
+    [SerializeField] float rcsTrust = 100f;
+    [SerializeField] float mainTrust = 1f;
 
     Rigidbody rigidbody;
     AudioSource audio;
@@ -31,7 +33,7 @@ public class Rocket : MonoBehaviour
                 audio.Play();
             }
 
-            rigidbody.AddRelativeForce(Vector3.up);
+            rigidbody.AddRelativeForce(Vector3.up * mainTrust);
         }
         else
         {
@@ -42,15 +44,16 @@ public class Rocket : MonoBehaviour
     private void Rotate()
     {
         rigidbody.freezeRotation = true;
+        float ratationThisFrame = rcsTrust * Time.deltaTime;
+
 
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(-Vector3.forward);
+            transform.Rotate(-Vector3.forward * ratationThisFrame);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(Vector3.forward);
-
+            transform.Rotate(Vector3.forward * ratationThisFrame);
         }
 
         rigidbody.freezeRotation = false;
