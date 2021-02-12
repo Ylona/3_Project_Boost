@@ -283,11 +283,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Launch Pad
       objectReference: {fileID: 0}
-    - target: {fileID: 6726900266548203158, guid: 420b312c88b9de6439a6773919317fe8,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: db8f3f5c9bc5dcd489b8b2592c643d6f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 420b312c88b9de6439a6773919317fe8, type: 3}
 --- !u!1001 &2517021032553284982
@@ -297,14 +292,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1487168401, guid: f82356ba3c8496544999433bbf44d526, type: 3}
-      propertyPath: m_Mass
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1487168401, guid: f82356ba3c8496544999433bbf44d526, type: 3}
-      propertyPath: m_Constraints
-      value: 56
-      objectReference: {fileID: 0}
     - target: {fileID: 2694551389500255003, guid: f82356ba3c8496544999433bbf44d526,
         type: 3}
       propertyPath: m_RootOrder
@@ -365,10 +352,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ruimteschip
       objectReference: {fileID: 0}
-    - target: {fileID: 5636824735670205671, guid: f82356ba3c8496544999433bbf44d526,
+    - target: {fileID: 3327923295743046049, guid: f82356ba3c8496544999433bbf44d526,
         type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f82356ba3c8496544999433bbf44d526, type: 3}
