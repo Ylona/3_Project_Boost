@@ -3,10 +3,17 @@ using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour {
     [SerializeField] float rcsTrust = 100f;
-    [SerializeField] float mainTrust = 1f;
+    [SerializeField] float mainTrust = 2000f;
+    [SerializeField] float LevelLoadDelay = 2f;
+
+
     [SerializeField] AudioClip mainEngine;
     [SerializeField] AudioClip death;
     [SerializeField] AudioClip newLevel;
+
+    [SerializeField] ParticleSystem mainEngineParticles;
+    [SerializeField] ParticleSystem deathParticles;
+    [SerializeField] ParticleSystem newLevelParticles;
 
     Rigidbody rigidbody;
     AudioSource audio;
@@ -46,14 +53,16 @@ public class Rocket : MonoBehaviour {
         state = State.Dying;
         audio.Stop();
         audio.PlayOneShot(death);
-        Invoke("LoadFirstLevel", 1f);
+        deathParticles.Play();
+        Invoke("LoadFirstLevel", LevelLoadDelay);
     }
 
     private void StartSuccessSequence() {
         state = State.Transcending;
         audio.Stop();
         audio.PlayOneShot(newLevel);
-        Invoke("LoadNextLevel", 1f);
+        newLevelParticles.Play();
+        Invoke("LoadNextLevel", LevelLoadDelay);
     }
 
     private void LoadFirstLevel() {
@@ -69,15 +78,25 @@ public class Rocket : MonoBehaviour {
             ApplyTrust();
         } else {
             audio.Stop();
+            mainEngineParticles.Stop();
         }
     }
 
     private void ApplyTrust() {
+
+        if (!mainEngineParticles.isPlaying) {
+            mainEngineParticles.Play();
+        }
+
+
         if (!audio.isPlaying) {
             audio.PlayOneShot(mainEngine);
         }
 
-        rigidbody.AddRelativeForce(Vector3.up * mainTrust);
+        rigidbody.AddRelativeForce(Vector3.up * mainTrust * Time.deltaTime);
+
+
+
     }
 
     private void RespondToRotateInput() {
@@ -89,7 +108,7 @@ public class Rocket : MonoBehaviour {
             transform.Rotate(-Vector3.forward * ratationThisFrame);
         } else if (Input.GetKey(KeyCode.D)) {
             transform.Rotate(Vector3.forward * ratationThisFrame);
-        }
+        } 
 
         rigidbody.freezeRotation = false;
 
