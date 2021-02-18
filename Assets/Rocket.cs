@@ -1,71 +1,93 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Rocket : MonoBehaviour
-{
+public class Rocket : MonoBehaviour {
     [SerializeField] float rcsTrust = 100f;
     [SerializeField] float mainTrust = 1f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip death;
+    [SerializeField] AudioClip newLevel;
 
     Rigidbody rigidbody;
     AudioSource audio;
+
+    enum State { Alive, Dying, Transcending }
+    State state = State.Alive;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         rigidbody = GetComponent<Rigidbody>();
         audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        Trust();
-        Rotate();
+    void Update() {
+        if (state == State.Alive) {
+            RespondToTrustInput();
+            RespondToRotateInput();
+        }
+
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        switch (collision.gameObject.tag)
-        {
+    private void OnCollisionEnter(Collision collision) {
+        if (state != State.Alive) { return; }
+        switch (collision.gameObject.tag) {
             case "Friendly":
-                print("friendly");
+                break;
+            case "Finish":
+                StartSuccessSequence();
                 break;
             default:
-                print("Die");
+                StartDeathSequence();
                 break;
         }
     }
 
-    private void Trust()
-    {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (!audio.isPlaying)
-            {
-                audio.Play();
-            }
+    private void StartDeathSequence() {
+        state = State.Dying;
+        audio.Stop();
+        audio.PlayOneShot(death);
+        Invoke("LoadFirstLevel", 1f);
+    }
 
-            rigidbody.AddRelativeForce(Vector3.up * mainTrust);
-        }
-        else
-        {
+    private void StartSuccessSequence() {
+        state = State.Transcending;
+        audio.Stop();
+        audio.PlayOneShot(newLevel);
+        Invoke("LoadNextLevel", 1f);
+    }
+
+    private void LoadFirstLevel() {
+        SceneManager.LoadScene(0);
+    }
+
+    private void LoadNextLevel() {
+        SceneManager.LoadScene(1);
+    }
+
+    private void RespondToTrustInput() {
+        if (Input.GetKey(KeyCode.Space)) {
+            ApplyTrust();
+        } else {
             audio.Stop();
         }
     }
 
-    private void Rotate()
-    {
+    private void ApplyTrust() {
+        if (!audio.isPlaying) {
+            audio.PlayOneShot(mainEngine);
+        }
+
+        rigidbody.AddRelativeForce(Vector3.up * mainTrust);
+    }
+
+    private void RespondToRotateInput() {
         rigidbody.freezeRotation = true;
         float ratationThisFrame = rcsTrust * Time.deltaTime;
 
 
-        if (Input.GetKey(KeyCode.A))
-        {
+        if (Input.GetKey(KeyCode.A)) {
             transform.Rotate(-Vector3.forward * ratationThisFrame);
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
+        } else if (Input.GetKey(KeyCode.D)) {
             transform.Rotate(Vector3.forward * ratationThisFrame);
         }
 
