@@ -15,10 +15,12 @@ public class Rocket : MonoBehaviour {
     [SerializeField] ParticleSystem deathParticles;
     [SerializeField] ParticleSystem newLevelParticles;
 
+    bool collisiansDisanabled = false;
+
     Rigidbody rigidbody;
     AudioSource audio;
 
-    enum State { Alive, Dying, Transcending }
+    enum State { Alive, Dying, Transcending}
     State state = State.Alive;
     // Start is called before the first frame update
     void Start() {
@@ -32,11 +34,13 @@ public class Rocket : MonoBehaviour {
             RespondToTrustInput();
             RespondToRotateInput();
         }
-
+        if (Debug.isDebugBuild) {
+            RespondToDebughInput();
+        }
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (state != State.Alive) { return; }
+        if (state != State.Alive || collisiansDisanabled) { return; }
         switch (collision.gameObject.tag) {
             case "Friendly":
                 break;
@@ -71,6 +75,15 @@ public class Rocket : MonoBehaviour {
 
     private void LoadNextLevel() {
         SceneManager.LoadScene(1);
+    }
+
+    private void RespondToDebughInput() {
+        if (Input.GetKeyDown(KeyCode.L)) {
+            LoadNextLevel();
+        } 
+        if (Input.GetKeyDown(KeyCode.C)) {
+            collisiansDisanabled = !collisiansDisanabled;
+        }
     }
 
     private void RespondToTrustInput() {
