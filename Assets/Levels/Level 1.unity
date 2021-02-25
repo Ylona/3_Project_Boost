@@ -449,7 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56587c1f14d4ad04ea9f4857fe797d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementVector: {x: 0, y: 0, z: 0}
+  movementVector: {x: 0, y: -10, z: 1}
   period: 2
 --- !u!108 &705507994 stripped
 Light:
